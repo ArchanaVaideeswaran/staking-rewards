@@ -9,21 +9,24 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract StakingReward is ReentrancyGuard, Pausable {
   using SafeERC20 for IERC20;
 
+  struct StakeHolder {
+    uint256 balance;
+    uint256 rewardsEarned;
+    uint256 rewardsPaid;
+    uint32 updatedAt;
+  }
+
+  event Staked(address stakeHolder, uint256 amount);
+  event Withdraw(address stakeHolder, uint256 amount);
+  event RewardsPaid(address stakeHolder, uint256 amount);
+
   uint32 private constant ONE_YEAR_IN_SECONDS = 31536000;
 
   IERC20 private _stakingToken;
   IERC20 private _rewardToken;
 
   uint8 private _rewardRate = 12; // 12% APR
-  uint32 private _rewardDuration = 30 days;
-  uint32 private _finishAt;
-  uint32 private _updatedAt;
-
-  uint256 private _totalSupply;
-  uint256 private _rewardBalance;
-
-  mapping(address => uint) private _userRewardPaid;
-  mapping(address => uint) private _rewards;
+  mapping(address => StakeHolder) _stakes;
   address private _owner;
 
   constructor(address stakingToken, address rewardToken) {
@@ -31,13 +34,51 @@ contract StakingReward is ReentrancyGuard, Pausable {
     _rewardToken = IERC20(rewardToken);
   }
 
-  function stake(uint amount) external nonReentrant whenNotPaused {}
+  function stake(uint amount) external nonReentrant whenNotPaused {
+    updateReward(msg.sender);
+    StakeHolder storage user = _stakes[msg.sender];
+    user.balance += amount;
+    _stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+    emit Staked(msg.sender, amount);
+  }
 
-  function withdraw(uint amount) external nonReentrant whenNotPaused {}
+  function withdraw(uint amount) external nonReentrant whenNotPaused {
+    updateReward(msg.sender);
+    StakeHolder storage user = _stakes[msg.sender];
+    user.balance -= amount;
+    _stakingToken.safeTransferFrom(address(this), msg.sender, amount);
+    emit Withdraw(msg.sender, amount);
+  }
 
-  function getRewards() external nonReentrant whenNotPaused {}
+  function getRewards() external nonReentrant whenNotPaused {
+    StakeHolder storage user = _stakes[msg.sender];
+    if (user.rewardsEarned > 0) {
+      user.rewardsPaid = user.rewardsEarned;
+      _rewardToken.safeTransferFrom(
+        address(this),
+        msg.sender,
+        user.rewardsPaid
+      );
+      emit RewardsPaid(msg.sender, user.rewardsPaid);
+    }
+  }
 
-  function earned(address account) public returns(uint) {}
+  function earned(address account) public view returns (uint) {
+    StakeHolder memory user = _stakes[account];
+    return
+      user.rewardsEarned +
+      ((user.balance *
+        (uint32(block.timestamp) - user.updatedAt) *
+        _rewardRate) / // uint8 private _rewardRate = 12; // 12% APR
+        ONE_YEAR_IN_SECONDS /
+        100);
+  }
 
-  function updateReward(address account) private {}
+  function updateReward(address account) private {
+    if (account != address(0)) {
+      StakeHolder storage user = _stakes[account];
+      user.rewardsEarned = earned(account);
+      user.updatedAt = uint32(block.timestamp);
+    }
+  }
 }
