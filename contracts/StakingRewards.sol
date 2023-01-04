@@ -2,6 +2,7 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -21,6 +22,8 @@ contract StakingReward is ReentrancyGuard, Pausable {
   event RewardsPaid(address stakeHolder, uint256 amount);
 
   uint32 private constant ONE_YEAR_IN_SECONDS = 31536000;
+  uint8 private immutable STAKING_TOKEN_DECIMALS;
+  uint8 private immutable REWARD_TOKEN_DECIMALS;
 
   IERC20 private _stakingToken;
   IERC20 private _rewardToken;
@@ -32,6 +35,8 @@ contract StakingReward is ReentrancyGuard, Pausable {
   constructor(address stakingToken, address rewardToken) {
     _stakingToken = IERC20(stakingToken);
     _rewardToken = IERC20(rewardToken);
+    STAKING_TOKEN_DECIMALS = IERC20Metadata(stakingToken).decimals();
+    REWARD_TOKEN_DECIMALS = IERC20Metadata(rewardToken).decimals();
   }
 
   function stake(uint amount) external nonReentrant whenNotPaused {
@@ -46,7 +51,7 @@ contract StakingReward is ReentrancyGuard, Pausable {
     updateReward(msg.sender);
     StakeHolder storage user = _stakes[msg.sender];
     user.balance -= amount;
-    _stakingToken.safeTransferFrom(address(this), msg.sender, amount);
+    _stakingToken.safeTransfer(msg.sender, amount);
     emit Withdraw(msg.sender, amount);
   }
 
@@ -65,13 +70,13 @@ contract StakingReward is ReentrancyGuard, Pausable {
 
   function earned(address account) public view returns (uint) {
     StakeHolder memory user = _stakes[account];
+    uint256 balance = (user.balance * 10 ** REWARD_TOKEN_DECIMALS) /
+      10 ** STAKING_TOKEN_DECIMALS;
+    if (user.updatedAt <= 0) return 0;
     return
       user.rewardsEarned +
-      ((user.balance *
-        (uint32(block.timestamp) - user.updatedAt) *
-        _rewardRate) / // uint8 private _rewardRate = 12; // 12% APR
-        ONE_YEAR_IN_SECONDS /
-        100);
+      ((((balance * (uint32(block.timestamp) - user.updatedAt)) /
+        ONE_YEAR_IN_SECONDS) * _rewardRate) / 100);
   }
 
   function updateReward(address account) private {
