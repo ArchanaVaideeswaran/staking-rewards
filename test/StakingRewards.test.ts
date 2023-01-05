@@ -32,7 +32,7 @@ describe("StakingRewards", () => {
     let StakingToken = await ethers.getContractFactory("Cupcake");
     stakingToken = await StakingToken.deploy(stakingTokenTotalSupply);
     await stakingToken.deployed();
-    console.log(`Cupcake (staking token) deployed at: ${stakingToken.address}`);
+    // console.log(`Cupcake (staking token) deployed at: ${stakingToken.address}`);
 
     // transfer some staking tokens form owner to users
     for (let i = 0; i < 5; i++) {
@@ -41,15 +41,12 @@ describe("StakingRewards", () => {
         ethers.utils.parseUnits("1000", stakingTokenDecimals)
       );
       receipt = await tx.wait();
-      console.log(
-        `staking token transfer to user${i} ${receipt.transactionHash}`
-      );
     }
 
     let RewardToken = await ethers.getContractFactory("Donut");
     rewardToken = await RewardToken.deploy(rewardTokenInitialSupply);
     await rewardToken.deployed();
-    console.log(`Donut (reward token) deployed at: ${rewardToken.address}`);
+    // console.log(`Donut (reward token) deployed at: ${rewardToken.address}`);
 
     let StakingReward = await ethers.getContractFactory("StakingReward");
     stakingReward = await StakingReward.deploy(
@@ -57,11 +54,18 @@ describe("StakingRewards", () => {
       rewardToken.address
     );
     await stakingReward.deployed();
-    console.log(`Staking Reward deployed at: ${stakingReward.address}`);
+    // console.log(`Staking Reward deployed at: ${stakingReward.address}`);
   });
 
   describe("stake", () => {
     let amount;
+    it("shoulde revert if stake amount is 0", async () => {
+      amount = 0;
+      await expect(
+        stakingReward.connect(users[0]).stake(amount)
+      ).to.be.revertedWithCustomError(stakingReward, "ZeroAmount");
+    });
+
     it("should stake the given amount", async () => {
       amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
       await expect(
@@ -92,6 +96,12 @@ describe("StakingRewards", () => {
 
   describe("withdraw", () => {
     let amount;
+    it("shoulde revert if withdraw amount is 0", async () => {
+      amount = 0;
+      await expect(
+        stakingReward.connect(users[0]).withdraw(amount)
+      ).to.be.revertedWithCustomError(stakingReward, "ZeroAmount");
+    });
     it("should withdraw the given amount", async () => {
       amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
 
@@ -102,6 +112,12 @@ describe("StakingRewards", () => {
   });
 
   describe("earned", () => {
+    it("shoulde revert if account is zero address", async () => {
+      await expect(
+        stakingReward.connect(users[0]).earned(ethers.constants.AddressZero)
+      ).to.be.revertedWithCustomError(stakingReward, "ZeroAddress");
+    });
+
     it("should return the amount of reward tokens earned by the user", async () => {
       currenTimestamp = await time.latest();
       let increase = currenTimestamp + ONE_MONTH_IN_SECONDS;
@@ -118,10 +134,10 @@ describe("StakingRewards", () => {
       let expectedUser1Rewards =
         (((100 * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * 12) / 100;
 
-      console.log(`
-      expected: ${expectedUser1Rewards}
-      actual: ${user1rewardBalance}
-      `);
+      // console.log(`
+      // expected: ${expectedUser1Rewards}
+      // actual: ${user1rewardBalance}
+      // `);
 
       expect(user1rewardBalance).to.approximately(expectedUser1Rewards, 0.001);
     });

@@ -10,6 +10,9 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract StakingReward is ReentrancyGuard, Pausable {
   using SafeERC20 for IERC20;
 
+  error ZeroAmount();
+  error ZeroAddress();
+
   struct StakeHolder {
     uint256 balance;
     uint256 rewardsEarned;
@@ -41,6 +44,7 @@ contract StakingReward is ReentrancyGuard, Pausable {
 
   function stake(uint amount) external nonReentrant whenNotPaused {
     updateReward(msg.sender);
+    if(amount == 0) revert ZeroAmount();
     StakeHolder storage user = _stakes[msg.sender];
     user.balance += amount;
     _stakingToken.safeTransferFrom(msg.sender, address(this), amount);
@@ -49,6 +53,7 @@ contract StakingReward is ReentrancyGuard, Pausable {
 
   function withdraw(uint amount) external nonReentrant whenNotPaused {
     updateReward(msg.sender);
+    if(amount == 0) revert ZeroAmount();
     StakeHolder storage user = _stakes[msg.sender];
     user.balance -= amount;
     _stakingToken.safeTransfer(msg.sender, amount);
@@ -69,6 +74,7 @@ contract StakingReward is ReentrancyGuard, Pausable {
   }
 
   function earned(address account) public view returns (uint) {
+    if(account == address(0)) revert ZeroAddress();
     StakeHolder memory user = _stakes[account];
     uint256 balance = (user.balance * 10 ** REWARD_TOKEN_DECIMALS) /
       10 ** STAKING_TOKEN_DECIMALS;
