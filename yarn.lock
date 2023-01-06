@@ -1063,6 +1063,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@solidstate/contracts@npm:^0.0.52":
+  version: 0.0.52
+  resolution: "@solidstate/contracts@npm:0.0.52"
+  checksum: 5fad8ba008abcde4fb19f691d6842b16d9cf40f2906df91ef9db314db7788ff260b57edb1d072fe2fe1dea1d440bed16d10a9896fe4473c8266d683ed029a05f
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -6748,6 +6755,7 @@ __metadata:
     "@nomiclabs/hardhat-solhint": ^3.0.0
     "@openzeppelin/contracts": ^4.8.0
     "@primitivefi/hardhat-dodoc": ^0.2.3
+    "@solidstate/contracts": ^0.0.52
     "@typechain/ethers-v5": ^10.2.0
     "@typechain/hardhat": ^6.1.5
     "@types/chai": ^4.3.4
