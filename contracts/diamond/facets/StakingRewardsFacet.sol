@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 contract StakingRewardsFacet is ReentrancyGuard, Pausable {
-  using SafeERC20 for IERC20;
   error ZeroAmount();
   error ZeroAddress();
 
@@ -37,6 +36,9 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     address owner;
   }
 
+  fallback() external {}
+  receive() external payable {}
+
   constructor(address stakingToken, address rewardToken, uint8 _rewardRate) {
     StakingRewardsStorage storage s = getStorage();
     s.stakingToken = IERC20(stakingToken);
@@ -52,7 +54,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     StakingRewardsStorage storage s = getStorage();
     StakeHolder storage user = s.stakes[msg.sender];
     user.balance += amount;
-    s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+    s.stakingToken.transferFrom(address(msg.sender), address(this), amount);
     emit Staked(msg.sender, amount);
   }
 
@@ -62,7 +64,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     StakingRewardsStorage storage s = getStorage();
     StakeHolder storage user = s.stakes[msg.sender];
     user.balance -= amount;
-    s.stakingToken.safeTransfer(msg.sender, amount);
+    s.stakingToken.transfer(address(msg.sender), amount);
     emit Withdraw(msg.sender, amount);
   }
 
@@ -71,9 +73,9 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     StakeHolder storage user = s.stakes[msg.sender];
     if (user.rewardsEarned > 0) {
       user.rewardsPaid = user.rewardsEarned;
-      s.rewardToken.safeTransferFrom(
+      s.rewardToken.transferFrom(
         address(this),
-        msg.sender,
+        address(msg.sender),
         user.rewardsPaid
       );
       emit RewardsPaid(msg.sender, user.rewardsPaid);
