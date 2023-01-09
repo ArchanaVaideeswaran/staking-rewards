@@ -38,6 +38,7 @@ describe("StakingRewardsFacet", () => {
     rewardTokenDecimals
   );
   let rewardRate = 12;
+  let wallet;
   let owner: SignerWithAddress;
   let users: SignerWithAddress[];
   let tx;
