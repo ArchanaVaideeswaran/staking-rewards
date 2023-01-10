@@ -20,6 +20,9 @@ library LibDiamond {
   bytes32 constant DIAMOND_STORAGE_POSITION =
     keccak256("diamond.standard.diamond.storage");
 
+  bytes32 constant STAKING_STORAGE_POSITION =
+    keccak256("diamond.staking.rewards.facet.storage");
+
   uint32 internal constant ONE_YEAR_IN_SECONDS = 31536000;
 
   struct FacetAddressAndPosition {
@@ -32,11 +35,19 @@ library LibDiamond {
     uint256 facetAddressPosition; // position of facetAddress in facetAddresses array
   }
 
+  // StakingRewardsFacet Storage Variables
   struct StakeHolder {
     uint256 balance;
     uint256 rewardsEarned;
     uint256 rewardsPaid;
     uint32 updatedAt;
+  }
+
+  struct StakingStorage {
+    IERC20 stakingToken;
+    IERC20 rewardToken;
+    uint8 rewardRate; // 12% APR
+    mapping(address => StakeHolder) stakes;
   }
 
   struct DiamondStorage {
@@ -52,17 +63,19 @@ library LibDiamond {
     mapping(bytes4 => bool) supportedInterfaces;
     // owner of the contract
     address contractOwner;
-    // StakingRewardsFacet Storage Variables
-    IERC20 stakingToken;
-    IERC20 rewardToken;
-    uint8 rewardRate; // 12% APR
-    mapping(address => StakeHolder) stakes;
   }
 
   function diamondStorage() internal pure returns (DiamondStorage storage ds) {
     bytes32 position = DIAMOND_STORAGE_POSITION;
     assembly {
       ds.slot := position
+    }
+  }
+
+  function stakingStorage() internal pure returns (StakingStorage storage ss) {
+    bytes32 position = STAKING_STORAGE_POSITION;
+    assembly {
+      ss.slot := position
     }
   }
 
