@@ -3,7 +3,10 @@ import { ethers } from "hardhat";
 
 const { getSelectors, FacetCutAction } = require("./libraries/diamond.js");
 
-async function deployDiamond() {
+export async function deployDiamond(): Promise<{
+  diamond: string;
+  diamondInit: string;
+}> {
   const accounts = await ethers.getSigners();
   const contractOwner = accounts[0];
 
@@ -35,8 +38,7 @@ async function deployDiamond() {
   console.log("Deploying facets");
   const FacetNames = [
     "DiamondLoupeFacet",
-    "OwnershipFacet",
-    "StakingRewardsFacet"
+    "OwnershipFacet"
   ];
   const cut = [];
   for (const FacetName of FacetNames) {
@@ -66,7 +68,7 @@ async function deployDiamond() {
     throw Error(`Diamond upgrade failed: ${tx.hash}`);
   }
   console.log("Completed diamond cut");
-  return diamond.address;
+  return { diamond: diamond.address, diamondInit: diamondInit.address };
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -79,5 +81,3 @@ if (require.main === module) {
       process.exit(1);
     });
 }
-
-exports.deployDiamond = deployDiamond;

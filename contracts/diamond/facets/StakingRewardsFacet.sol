@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "../libraries/LibDiamond.sol";
 
 contract StakingRewardsFacet is ReentrancyGuard, Pausable {
+  using SafeERC20 for IERC20;
+
   error ZeroAmount();
   error ZeroAddress();
 
@@ -22,7 +24,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
     user.balance += amount;
-    s.stakingToken.transferFrom(msg.sender, address(this), amount);
+    s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
     emit Staked(msg.sender, amount);
   }
 
@@ -35,7 +37,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
       LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
       LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
       user.balance -= amount;
-      s.stakingToken.transfer(address(msg.sender), amount);
+      s.stakingToken.safeTransfer(address(msg.sender), amount);
       emit Withdraw(msg.sender, amount);
       distributeRewards();
     }
@@ -45,6 +47,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     if (account == address(0)) revert ZeroAddress();
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[account];
+    
     if (user.updatedAt == 0) return 0;
 
     uint8 rewardTokenDecimal = IERC20Metadata(address(s.rewardToken))
@@ -62,14 +65,11 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
   function distributeRewards() internal {
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
-    if (user.rewardsEarned > 0) {
+    uint256 rewardsPending = user.rewardsEarned - user.rewardsPaid;
+    if (rewardsPending > 0) {
       user.rewardsPaid = user.rewardsEarned;
-      s.rewardToken.transferFrom(
-        address(this),
-        address(msg.sender),
-        user.rewardsPaid
-      );
-      emit RewardsPaid(msg.sender, user.rewardsPaid);
+      s.rewardToken.safeTransfer(address(msg.sender), rewardsPending);
+      emit RewardsPaid(msg.sender, rewardsPending);
     }
   }
 

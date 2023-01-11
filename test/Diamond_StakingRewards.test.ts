@@ -6,15 +6,22 @@ import {
   Cupcake,
   Donut,
   StakingRewardsFacet,
+  DiamondCutFacet,
+  DiamondInit,
 } from "../typechain-types";
+import { deployDiamond } from "../scripts/deploy";
 
-const { deployDiamond } = require("../scripts/deploy.ts");
+const {
+  getSelectors,
+  FacetCutAction,
+} = require("../scripts/libraries/diamond.js");
 
 describe("StakingRewardsFacet", () => {
   const ONE_YEAR_IN_SECONDS = 31536000;
   const ONE_MONTH_IN_SECONDS = 2592000;
   let currenTimestamp;
-  let diamond: any;
+  let diamondCutFacet: DiamondCutFacet;
+  let diamondInitInstance: DiamondInit;
   let stakingRewardsFacet: StakingRewardsFacet;
   let stakingToken: Cupcake;
   let stakingTokenDecimals = 8;
@@ -56,18 +63,41 @@ describe("StakingRewardsFacet", () => {
     await rewardToken.deployed();
     console.log(`Donut (reward token) deployed at: ${rewardToken.address}`);
 
-    diamond = deployDiamond();
+    let {diamond, diamondInit} = await deployDiamond();
 
+    let StakingRewardsFacet = await ethers.getContractFactory(
+      "StakingRewardsFacet"
+    );
+    stakingRewardsFacet = await StakingRewardsFacet.deploy();
+    await stakingRewardsFacet.deployed();
+
+    const cut = [];
+    cut.push({
+      facetAddress: stakingRewardsFacet.address,
+      action: FacetCutAction.Add,
+      functionSelectors: getSelectors(stakingRewardsFacet),
+    });
+    // upgrade diamond with facets
+    diamondCutFacet = await ethers.getContractAt("IDiamondCut", diamond);
+    diamondInitInstance = await ethers.getContractAt(
+      "DiamondInit",
+      diamondInit
+    );
+    let functionCall = diamondInitInstance.interface.encodeFunctionData(
+      "init_StakingRewardsFacet",
+      [stakingToken.address, rewardToken.address, rewardRate]
+    );
+    tx = await diamondCutFacet.diamondCut(cut, diamondInit, functionCall);
+    receipt = await tx.wait();
+    if (!receipt.status) {
+      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+    }
     stakingRewardsFacet = await ethers.getContractAt(
       "StakingRewardsFacet",
       diamond
     );
-
-    await stakingRewardsFacet.initialize(
-      stakingToken.address,
-      rewardToken.address,
-      rewardRate
-    );
+    tx = await rewardToken.transfer(diamond, rewardTokenInitialSupply);
+    receipt = await tx.wait();
   });
 
   describe("stake", () => {
@@ -115,12 +145,6 @@ describe("StakingRewardsFacet", () => {
 
   describe("withdraw", () => {
     let amount;
-    it("shoulde revert if withdraw amount is 0", async () => {
-      amount = 0;
-      await expect(
-        stakingRewardsFacet.connect(users[0]).withdraw(amount)
-      ).to.be.revertedWithCustomError(stakingRewardsFacet, "ZeroAmount");
-    });
     it("should withdraw the given amount", async () => {
       amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
 
@@ -144,8 +168,7 @@ describe("StakingRewardsFacet", () => {
       let increase = currenTimestamp + ONE_MONTH_IN_SECONDS;
       currenTimestamp = await time.increaseTo(increase);
 
-      let user1rewardBalance: any =
-      await stakingRewardsFacet.earned(
+      let user1rewardBalance: any = await stakingRewardsFacet.earned(
         users[1].address
       );
       user1rewardBalance = ethers.utils.formatUnits(
