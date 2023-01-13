@@ -13,16 +13,19 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
   error ZeroAmount();
   error ZeroAddress();
+  error LockInPeriod();
 
   event Staked(address stakeHolder, uint256 amount);
   event Withdraw(address stakeHolder, uint256 amount);
   event RewardsPaid(address stakeHolder, uint256 amount);
 
   function stake(uint amount) external nonReentrant whenNotPaused {
-    _updateReward(msg.sender);
     if (amount == 0) revert ZeroAmount();
+    _updateReward(msg.sender);
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+    if (user.finishAt == 0)
+      user.finishAt = uint32(block.timestamp) + LibDiamond.ONE_YEAR_IN_SECONDS;
     user.balance += amount;
     s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
     emit Staked(msg.sender, amount);
@@ -36,10 +39,12 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     } else {
       LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
       LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
-      user.balance -= amount;
-      s.stakingToken.safeTransfer(address(msg.sender), amount);
-      emit Withdraw(msg.sender, amount);
-      distributeRewards();
+      if (uint32(block.timestamp) > user.finishAt) {
+        user.balance -= amount;
+        s.stakingToken.safeTransfer(address(msg.sender), amount);
+        emit Withdraw(msg.sender, amount);
+        distributeRewards();
+      } else revert LockInPeriod();
     }
   }
 
@@ -47,7 +52,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     if (account == address(0)) revert ZeroAddress();
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[account];
-    
+
     if (user.updatedAt == 0) return 0;
 
     uint8 rewardTokenDecimal = IERC20Metadata(address(s.rewardToken))
@@ -59,10 +64,10 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     return
       user.rewardsEarned +
       ((((balance * (uint32(block.timestamp) - user.updatedAt)) /
-        LibDiamond.ONE_YEAR_IN_SECONDS) * s.rewardRate) / 100);
+        LibDiamond.ONE_YEAR_IN_SECONDS) * s.rewardRate) / 100); // pnr/100
   }
 
-  function distributeRewards() internal {
+  function distributeRewards() private {
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
     uint256 rewardsPending = user.rewardsEarned - user.rewardsPaid;

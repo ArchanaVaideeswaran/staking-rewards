@@ -41,6 +41,7 @@ library LibDiamond {
     uint256 rewardsEarned;
     uint256 rewardsPaid;
     uint32 updatedAt;
+    uint32 finishAt;
   }
 
   struct StakingStorage {
