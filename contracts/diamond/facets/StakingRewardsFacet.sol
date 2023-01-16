@@ -21,9 +21,10 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
   function stake(uint amount) external nonReentrant whenNotPaused {
     if (amount == 0) revert ZeroAmount();
-    _updateReward(msg.sender);
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+    if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+    _updateReward(msg.sender);
     if (user.finishAt == 0)
       user.finishAt = uint32(block.timestamp) + LibDiamond.ONE_YEAR_IN_SECONDS;
     user.balance += amount;
