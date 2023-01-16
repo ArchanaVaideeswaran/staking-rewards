@@ -21,12 +21,17 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
   function stake(uint amount) external nonReentrant whenNotPaused {
     if (amount == 0) revert ZeroAmount();
+
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+
     if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
     _updateReward(msg.sender);
+
     if (user.finishAt == 0)
       user.finishAt = uint32(block.timestamp) + LibDiamond.ONE_YEAR_IN_SECONDS;
+    
     user.balance += amount;
     s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
     emit Staked(msg.sender, amount);
@@ -34,9 +39,12 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
   function withdraw(uint amount) external nonReentrant whenNotPaused {
     _updateReward(msg.sender);
+
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+
     if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
     if (amount == 0) {
       distributeRewards();
       return;
@@ -50,10 +58,12 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
   function earned(address account) public view returns (uint) {
     if (account == address(0)) revert ZeroAddress();
+
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[account];
 
     if (user.updatedAt == 0) return 0;
+    if (user.balance == 0) return user.rewardsEarned;
 
     uint8 rewardTokenDecimal = IERC20Metadata(address(s.rewardToken))
       .decimals();
