@@ -173,8 +173,15 @@ describe("StakingRewardsFacet", () => {
         )
       );
 
+      let staked = parseFloat(
+        ethers.utils.formatUnits(
+          (await stakingRewardsFacet.getBalance(users[0].address)).toString(),
+          stakingTokenDecimals
+        )
+      );
+
       let user0RewardsEarnedExpected =
-        (((100 * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
+        (((staked * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
         100;
 
       await expect(stakingRewardsFacet.connect(users[0]).withdraw(amount))
@@ -237,8 +244,15 @@ describe("StakingRewardsFacet", () => {
         .to.changeTokenBalance(stakingToken, users[1], amount);
 
       // comparing expected rewards to actual rewards earned
+      let staked = parseFloat(
+        ethers.utils.formatUnits(
+          (await stakingRewardsFacet.getBalance(users[1].address)).toString(),
+          stakingTokenDecimals
+        )
+      );
+
       let user1RewardBalExpected: any =
-        (((100 * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
+        (((staked * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
         100;
 
       let user1RewardBalActual = parseFloat(
@@ -267,8 +281,15 @@ describe("StakingRewardsFacet", () => {
         )
       );
 
+      let staked = parseFloat(
+        ethers.utils.formatUnits(
+          (await stakingRewardsFacet.getBalance(users[0].address)).toString(),
+          stakingTokenDecimals
+        )
+      );
+
       let user0RewardsEarnedExpected =
-        (((50 * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) / 100;
+        (((staked * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) / 100;
 
       await expect(stakingRewardsFacet.connect(users[0]).withdrawAll())
         .to.emit(stakingRewardsFacet, "Withdraw")
@@ -343,8 +364,15 @@ describe("StakingRewardsFacet", () => {
       );
       user2rewardBalance = parseFloat(user2rewardBalance);
 
+      let staked = parseFloat(
+        ethers.utils.formatUnits(
+          (await stakingRewardsFacet.getBalance(users[2].address)).toString(),
+          stakingTokenDecimals
+        )
+      );
+
       let expectedUser2Rewards =
-        (((100 * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * 12) / 100;
+        (((staked * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * 12) / 100;
 
       console.log(`
         expected: ${expectedUser2Rewards}
