@@ -9,89 +9,122 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "../libraries/LibDiamond.sol";
 
 contract StakingRewardsFacet is ReentrancyGuard, Pausable {
+  using SafeERC20 for IERC20;
+
   error ZeroAmount();
   error ZeroAddress();
+  error LockInPeriod();
 
   event Staked(address stakeHolder, uint256 amount);
   event Withdraw(address stakeHolder, uint256 amount);
   event RewardsPaid(address stakeHolder, uint256 amount);
 
-  bytes32 internal constant STAKING_REWARDS_NAMESPACE =
-    keccak256("diamond.staking.rewards");
-
-  fallback() external {}
-
-  receive() external payable {}
-
-  constructor(address stakingToken, address rewardToken, uint8 _rewardRate) {
-    LibDiamond.StakingRewardsStorage storage s = LibDiamond
-      .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
-    s.stakingToken = IERC20(stakingToken);
-    s.rewardToken = IERC20(rewardToken);
-    s.rewardRate = _rewardRate;
-    s.owner = msg.sender;
-  }
-
   function stake(uint amount) external nonReentrant whenNotPaused {
-    updateReward(msg.sender);
     if (amount == 0) revert ZeroAmount();
-    LibDiamond.StakingRewardsStorage storage s = LibDiamond
-      .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
+
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+
+    if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
+    _updateReward(msg.sender);
+
+    if (user.finishAt == 0)
+      user.finishAt = uint32(block.timestamp) + LibDiamond.ONE_YEAR_IN_SECONDS;
+
     user.balance += amount;
-    s.stakingToken.transferFrom(msg.sender, address(this), amount);
+    s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
     emit Staked(msg.sender, amount);
   }
 
   function withdraw(uint amount) external nonReentrant whenNotPaused {
-    updateReward(msg.sender);
-    if (amount == 0) revert ZeroAmount();
-    LibDiamond.StakingRewardsStorage storage s = LibDiamond
-      .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
+    _updateReward(msg.sender);
+
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
-    user.balance -= amount;
-    s.stakingToken.transfer(address(msg.sender), amount);
-    emit Withdraw(msg.sender, amount);
+
+    if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
+    if (amount == 0) {
+      distributeRewards();
+      return;
+    } else {
+      user.balance -= amount;
+      s.stakingToken.safeTransfer(address(msg.sender), amount);
+      emit Withdraw(msg.sender, amount);
+      distributeRewards();
+    }
   }
 
-  function getRewards() external nonReentrant whenNotPaused {
-    LibDiamond.StakingRewardsStorage storage s = LibDiamond
-      .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
+  function withdrawAll() external nonReentrant whenNotPaused {
+    _updateReward(msg.sender);
+
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
-    if (user.rewardsEarned > 0) {
-      user.rewardsPaid = user.rewardsEarned;
-      s.rewardToken.transferFrom(
-        address(this),
-        address(msg.sender),
-        user.rewardsPaid
-      );
-      emit RewardsPaid(msg.sender, user.rewardsPaid);
-    }
+
+    if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
+    s.stakingToken.safeTransfer(address(msg.sender), user.balance);
+    emit Withdraw(msg.sender, user.balance);
+    distributeRewards();
   }
 
   function earned(address account) public view returns (uint) {
     if (account == address(0)) revert ZeroAddress();
-    LibDiamond.StakingRewardsStorage storage s = LibDiamond
-      .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
+
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[account];
+
     if (user.updatedAt == 0) return 0;
+    if (user.balance == 0) return user.rewardsEarned;
 
     uint8 rewardTokenDecimal = IERC20Metadata(address(s.rewardToken))
       .decimals();
     uint8 stakingTokenDecimal = IERC20Metadata(address(s.stakingToken))
       .decimals();
-    uint256 balance = (user.balance * 10 ** rewardTokenDecimal) /
+
+    uint256 p = (user.balance * 10 ** rewardTokenDecimal) /
       10 ** stakingTokenDecimal;
-    return
-      user.rewardsEarned +
-      ((((balance * (uint32(block.timestamp) - user.updatedAt)) /
-        LibDiamond.ONE_YEAR_IN_SECONDS) * s.rewardRate) / 100);
+    uint32 n = uint32(block.timestamp) - user.updatedAt;
+    uint256 pn = (p * n) / LibDiamond.ONE_YEAR_IN_SECONDS;
+    uint8 r = s.rewardRate;
+    uint256 interest = (pn * r) / 100;
+
+    return user.rewardsEarned + interest;
   }
 
-  function updateReward(address account) private {
+  function getBalance(address account) public view returns (uint256) {
+    return LibDiamond.stakingStorage().stakes[account].balance;
+  }
+
+  function getRewardBalance(address account) public view returns (uint256) {
+    uint256 rewardsEarned = LibDiamond
+      .stakingStorage()
+      .stakes[account]
+      .rewardsEarned;
+
+    uint256 rewardsPaid = LibDiamond
+      .stakingStorage()
+      .stakes[account]
+      .rewardsPaid;
+
+    return rewardsEarned - rewardsPaid;
+  }
+
+  function distributeRewards() private {
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
+    LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+    uint256 rewardsPending = user.rewardsEarned - user.rewardsPaid;
+    if (rewardsPending > 0) {
+      user.rewardsPaid = user.rewardsEarned;
+      s.rewardToken.safeTransfer(address(msg.sender), rewardsPending);
+      emit RewardsPaid(msg.sender, rewardsPending);
+    }
+  }
+
+  function _updateReward(address account) private {
     if (account != address(0)) {
-      LibDiamond.StakingRewardsStorage storage s = LibDiamond
-        .getStakingRewardsStorage(STAKING_REWARDS_NAMESPACE);
+      LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
       LibDiamond.StakeHolder storage user = s.stakes[account];
       user.rewardsEarned = earned(account);
       user.updatedAt = uint32(block.timestamp);
