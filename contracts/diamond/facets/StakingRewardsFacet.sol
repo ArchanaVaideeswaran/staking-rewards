@@ -97,20 +97,6 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     return LibDiamond.stakingStorage().stakes[account].balance;
   }
 
-  function getRewardBalance(address account) public view returns (uint256) {
-    uint256 rewardsEarned = LibDiamond
-      .stakingStorage()
-      .stakes[account]
-      .rewardsEarned;
-
-    uint256 rewardsPaid = LibDiamond
-      .stakingStorage()
-      .stakes[account]
-      .rewardsPaid;
-
-    return rewardsEarned - rewardsPaid;
-  }
-
   function distributeRewards() private {
     LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
     LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
