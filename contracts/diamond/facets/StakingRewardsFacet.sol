@@ -31,7 +31,7 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
     if (user.finishAt == 0)
       user.finishAt = uint32(block.timestamp) + LibDiamond.ONE_YEAR_IN_SECONDS;
-    
+
     user.balance += amount;
     s.stakingToken.safeTransferFrom(msg.sender, address(this), amount);
     emit Staked(msg.sender, amount);
@@ -56,6 +56,19 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     }
   }
 
+  function withdrawAll() external nonReentrant whenNotPaused {
+    _updateReward(msg.sender);
+
+    LibDiamond.StakingStorage storage s = LibDiamond.stakingStorage();
+    LibDiamond.StakeHolder storage user = s.stakes[msg.sender];
+
+    if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
+
+    s.stakingToken.safeTransfer(address(msg.sender), user.balance);
+    emit Withdraw(msg.sender, user.balance);
+    distributeRewards();
+  }
+
   function earned(address account) public view returns (uint) {
     if (account == address(0)) revert ZeroAddress();
 
@@ -78,6 +91,24 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
     uint256 interest = (pn * r) / 100;
 
     return user.rewardsEarned + interest;
+  }
+
+  function getBalance(address account) public view returns (uint256) {
+    return LibDiamond.stakingStorage().stakes[account].balance;
+  }
+
+  function getRewardBalance(address account) public view returns (uint256) {
+    uint256 rewardsEarned = LibDiamond
+      .stakingStorage()
+      .stakes[account]
+      .rewardsEarned;
+
+    uint256 rewardsPaid = LibDiamond
+      .stakingStorage()
+      .stakes[account]
+      .rewardsPaid;
+
+    return rewardsEarned - rewardsPaid;
   }
 
   function distributeRewards() private {
