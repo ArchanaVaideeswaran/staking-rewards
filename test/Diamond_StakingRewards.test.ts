@@ -2,13 +2,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  Cupcake,
-  Donut,
-  StakingRewardsFacet,
-  DiamondCutFacet,
-  DiamondInit,
-} from "../typechain-types";
+import { Cupcake, Donut, StakingRewardsFacet } from "../typechain-types";
 import { deployDiamond } from "../scripts/deploy";
 
 const {
@@ -119,6 +113,7 @@ describe("StakingRewardsFacet", () => {
     });
 
     it("should stake the given amount", async () => {
+      // users[0]
       amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
       await expect(
         stakingToken
@@ -126,9 +121,8 @@ describe("StakingRewardsFacet", () => {
           .approve(stakingRewardsFacet.address, amount)
       ).not.to.be.reverted;
 
-      await expect(
-        stakingRewardsFacet.connect(users[0]).stake(amount)
-      ).to.changeTokenBalance(stakingToken, stakingRewardsFacet, amount)
+      await expect(stakingRewardsFacet.connect(users[0]).stake(amount))
+        .to.changeTokenBalance(stakingToken, stakingRewardsFacet, amount)
         .to.emit(stakingRewardsFacet, "Staked");
     });
 
@@ -162,35 +156,143 @@ describe("StakingRewardsFacet", () => {
       await expect(stakingRewardsFacet.connect(users[0]).withdraw(0))
         .to.emit(stakingRewardsFacet, "RewardsPaid")
         .not.to.emit(stakingRewardsFacet, "Withdraw")
-        .to.changeTokenBalance(stakingToken, users[0], user0rewardBalance);
+        .to.changeTokenBalance(rewardToken, users[0], user0rewardBalance);
     });
 
     it("should withdraw given amount and distribute rewards", async () => {
-      //user[1]
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("50", stakingTokenDecimals);
+      // wait one month period
+      currenTimestamp = await time.latest();
+      let increase = currenTimestamp + ONE_MONTH_IN_SECONDS;
+      currenTimestamp = await time.increaseTo(increase);
 
-      // approve
+      let user0RewardBalanceBefore = parseFloat(
+        ethers.utils.formatUnits(
+          (await rewardToken.balanceOf(users[0].address)).toString(),
+          rewardTokenDecimals
+        )
+      );
+
+      let user0RewardsEarnedExpected =
+        (((100 * ONE_MONTH_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
+        100;
+
+      await expect(stakingRewardsFacet.connect(users[0]).withdraw(amount))
+        .to.emit(stakingRewardsFacet, "Withdraw")
+        .to.emit(stakingRewardsFacet, "RewardsPaid")
+        .to.changeTokenBalance(stakingToken, users[0], amount);
+
+      let user0RewardBalanceAfter = parseFloat(
+        ethers.utils.formatUnits(
+          (await rewardToken.balanceOf(users[0].address)).toString(),
+          rewardTokenDecimals
+        )
+      );
+
+      let user0RewardsEarnedActual =
+        user0RewardBalanceAfter - user0RewardBalanceBefore;
+
+      console.log(`
+        expected: ${user0RewardsEarnedExpected}
+        actual: ${user0RewardsEarnedActual}
+      `);
+      expect(user0RewardsEarnedActual).to.approximately(
+        user0RewardsEarnedExpected,
+        0.0001
+      );
+    });
+  });
+
+  describe("withdrawAll", () => {
+    let amount;
+    it("should revert if withdrawn during lock-in period", async () => {
+      //users[1]
+      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
       await expect(
         stakingToken
           .connect(users[1])
           .approve(stakingRewardsFacet.address, amount)
       ).not.to.be.reverted;
 
-      // stake
       await expect(
         stakingRewardsFacet.connect(users[1]).stake(amount)
       ).to.changeTokenBalance(stakingToken, stakingRewardsFacet, amount);
 
-      // wait lock-in period
+      await expect(
+        stakingRewardsFacet.connect(users[1]).withdrawAll()
+      ).to.be.revertedWithCustomError(stakingRewardsFacet, "LockInPeriod");
+    });
+
+    it("should withdraw all balance of user", async () => {
+      // wait one year
       currenTimestamp = await time.latest();
       let increase = currenTimestamp + ONE_YEAR_IN_SECONDS;
       currenTimestamp = await time.increaseTo(increase);
 
       // withdraw amount and rewards
-      await expect(stakingRewardsFacet.connect(users[1]).withdraw(amount))
+      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      await expect(stakingRewardsFacet.connect(users[1]).withdrawAll())
         .to.emit(stakingRewardsFacet, "RewardsPaid")
         .to.emit(stakingRewardsFacet, "Withdraw")
         .to.changeTokenBalance(stakingToken, users[1], amount);
+
+      // comparing expected rewards to actual rewards earned
+      let user1RewardBalExpected: any =
+        (((100 * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) /
+        100;
+
+      let user1RewardBalActual = parseFloat(
+        ethers.utils.formatUnits(
+          (await rewardToken.balanceOf(users[1].address)).toString(),
+          rewardTokenDecimals
+        )
+      );
+      console.log(`
+        expected: ${user1RewardBalExpected}
+        actual: ${user1RewardBalActual}
+      `);
+      expect(user1RewardBalActual).to.approximately(
+        user1RewardBalExpected,
+        0.0001
+      );
+    });
+
+    it("should withdraw remaining balance of user", async () => {
+      amount = ethers.utils.parseUnits("50", stakingTokenDecimals);
+
+      let user0RewardBalanceBefore = parseFloat(
+        ethers.utils.formatUnits(
+          (await rewardToken.balanceOf(users[0].address)).toString(),
+          rewardTokenDecimals
+        )
+      );
+
+      let user0RewardsEarnedExpected =
+        (((50 * ONE_YEAR_IN_SECONDS) / ONE_YEAR_IN_SECONDS) * rewardRate) / 100;
+
+      await expect(stakingRewardsFacet.connect(users[0]).withdrawAll())
+        .to.emit(stakingRewardsFacet, "Withdraw")
+        .to.emit(stakingRewardsFacet, "RewardsPaid")
+        .to.changeTokenBalance(stakingToken, users[0], amount);
+
+      let user0RewardBalanceAfter = parseFloat(
+        ethers.utils.formatUnits(
+          (await rewardToken.balanceOf(users[0].address)).toString(),
+          rewardTokenDecimals
+        )
+      );
+
+      let user0RewardsEarnedActual =
+        user0RewardBalanceAfter - user0RewardBalanceBefore;
+
+      console.log(`
+        expected: ${user0RewardsEarnedExpected}
+        actual: ${user0RewardsEarnedActual}
+      `);
+      expect(user0RewardsEarnedActual).to.approximately(
+        user0RewardsEarnedExpected,
+        0.0001
+      );
     });
   });
 
