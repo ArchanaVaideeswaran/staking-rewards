@@ -1,0 +1,323 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="709pt" height="645pt" viewBox="0.00 0.00 709.30 645.49">
+<g id="graph0" class="graph" transform="translate(4,641.489990234375) scale(1)" data-name="G">
+
+<polygon fill="#2e3e56" stroke="none" points="-4,4 -4,-641.49 705.3,-641.49 705.3,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="clusterStakingRewardsFacet">
+
+<path fill="#445773" stroke="#445773" d="M20,-193.49C20,-193.49 681.3,-193.49 681.3,-193.49 687.3,-193.49 693.3,-199.49 693.3,-205.49 693.3,-205.49 693.3,-480.49 693.3,-480.49 693.3,-486.49 687.3,-492.49 681.3,-492.49 681.3,-492.49 20,-492.49 20,-492.49 14,-492.49 8,-486.49 8,-480.49 8,-480.49 8,-205.49 8,-205.49 8,-199.49 14,-193.49 20,-193.49" style=""/>
+<text text-anchor="middle" x="350.65" y="-475.89" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">StakingRewardsFacet</text>
+</g>
+<g id="clust2" class="cluster" data-name="clusterLibDiamond">
+
+<path fill="#3b4b63" stroke="#e8726d" stroke-dasharray="5,2" d="M542.26,-108.49C542.26,-108.49 671.12,-108.49 671.12,-108.49 677.12,-108.49 683.12,-114.49 683.12,-120.49 683.12,-120.49 683.12,-173.49 683.12,-173.49 683.12,-179.49 677.12,-185.49 671.12,-185.49 671.12,-185.49 542.26,-185.49 542.26,-185.49 536.26,-185.49 530.26,-179.49 530.26,-173.49 530.26,-173.49 530.26,-120.49 530.26,-120.49 530.26,-114.49 536.26,-108.49 542.26,-108.49" style=""/>
+<text text-anchor="middle" x="606.69" y="-168.89" font-family="Times,serif" font-size="14.00" fill="#f0f0f0" style="">LibDiamond</text>
+</g>
+<g id="clust3" class="cluster" data-name="cluster_01">
+
+<polygon fill="#2e3e56" stroke="black" points="26.96,-500.49 26.96,-629.49 336.23,-629.49 336.23,-500.49 26.96,-500.49" style=""/>
+<text text-anchor="middle" x="181.6" y="-612.89" font-family="Times,serif" font-size="14.00" style="">Legend</text>
+</g>
+<!-- StakingRewardsFacet.stake -->
+<g id="node1" class="node" pointer-events="visible" data-name="StakingRewardsFacet.stake">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="99.96" cy="-435.49" rx="30.76" ry="18" style=""/>
+<text text-anchor="middle" x="99.96" y="-431.29" font-family="Times,serif" font-size="14.00" style="">stake</text>
+</g>
+<!-- StakingRewardsFacet._updateReward -->
+<g id="node8" class="node" pointer-events="visible" data-name="StakingRewardsFacet._updateReward">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="301.23" cy="-367.49" rx="71.78" ry="18" style=""/>
+<text text-anchor="middle" x="301.23" y="-363.29" font-family="Times,serif" font-size="14.00" style="">_updateReward</text>
+</g>
+<!-- StakingRewardsFacet.stake&#45;&gt;StakingRewardsFacet._updateReward -->
+<g id="edge4" class="edge" data-name="StakingRewardsFacet.stake-&gt;StakingRewardsFacet._updateReward">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M128.67,-426.66C144.82,-421.47 165.56,-414.72 183.93,-408.49 203.8,-401.76 225.51,-394.17 244.73,-387.37" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="245.85,-390.68 254.11,-384.04 243.51,-384.09 245.85,-390.68" style=""/>
+</g>
+<!-- StakingRewardsFacet.ZeroAmount -->
+<g id="node9" class="node" pointer-events="visible" data-name="StakingRewardsFacet.ZeroAmount">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="301.23" cy="-441.49" rx="60.84" ry="18" style=""/>
+<text text-anchor="middle" x="301.23" y="-437.29" font-family="Times,serif" font-size="14.00" style="">ZeroAmount</text>
+</g>
+<!-- StakingRewardsFacet.stake&#45;&gt;StakingRewardsFacet.ZeroAmount -->
+<g id="edge1" class="edge" data-name="StakingRewardsFacet.stake-&gt;StakingRewardsFacet.ZeroAmount">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M132.1,-436.43C157.32,-437.19 193.89,-438.29 226.49,-439.27" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="226.1,-442.76 236.2,-439.57 226.31,-435.77 226.1,-442.76" style=""/>
+</g>
+<!-- StakingRewardsFacet.LockInPeriod -->
+<g id="node10" class="node" pointer-events="visible" data-name="StakingRewardsFacet.LockInPeriod">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="301.23" cy="-313.49" rx="64.27" ry="18" style=""/>
+<text text-anchor="middle" x="301.23" y="-309.29" font-family="Times,serif" font-size="14.00" style="">LockInPeriod</text>
+</g>
+<!-- StakingRewardsFacet.stake&#45;&gt;StakingRewardsFacet.LockInPeriod -->
+<g id="edge3" class="edge" data-name="StakingRewardsFacet.stake-&gt;StakingRewardsFacet.LockInPeriod">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M131.32,-431.35C148.35,-427.72 169.09,-420.97 183.93,-408.49 210.1,-386.48 193.86,-362.63 219.93,-340.49 224.85,-336.32 230.44,-332.78 236.33,-329.78" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="237.42,-333.13 245.15,-325.88 234.59,-326.72 237.42,-333.13" style=""/>
+</g>
+<!-- StakingRewardsFacet.address -->
+<g id="node11" class="node" pointer-events="visible" data-name="StakingRewardsFacet.address">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="606.69" cy="-333.49" rx="40" ry="18" style=""/>
+<text text-anchor="middle" x="606.69" y="-329.29" font-family="Times,serif" font-size="14.00" style="">address</text>
+</g>
+<!-- StakingRewardsFacet.stake&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge5" class="edge" data-name="StakingRewardsFacet.stake-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M130.72,-429.8C154.74,-425.3 189.44,-419.06 219.93,-414.49 291.94,-403.72 314.75,-421.09 382.53,-394.49 400.91,-387.28 400.4,-376.27 418.53,-368.49 424.85,-365.78 501.93,-351.83 555.17,-342.38" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="555.59,-345.86 564.82,-340.67 554.37,-338.97 555.59,-345.86" style=""/>
+</g>
+<!-- LibDiamond.stakingStorage -->
+<g id="node14" class="node" pointer-events="visible" data-name="LibDiamond.stakingStorage">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="606.69" cy="-134.49" rx="68.36" ry="18" style=""/>
+<text text-anchor="middle" x="606.69" y="-130.29" font-family="Times,serif" font-size="14.00" style="">stakingStorage</text>
+</g>
+<!-- StakingRewardsFacet.stake&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge2" class="edge" data-name="StakingRewardsFacet.stake-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M131.64,-433.15C149.44,-430.15 170.86,-423.43 183.93,-408.49 242.25,-341.84 157.86,-275.68 219.93,-212.49 261.73,-169.94 425.95,-149.15 526.16,-140.23" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="526.27,-143.73 535.93,-139.39 525.67,-136.76 526.27,-143.73" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw -->
+<g id="node2" class="node" pointer-events="visible" data-name="StakingRewardsFacet.withdraw">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="99.96" cy="-381.49" rx="47.52" ry="18" style=""/>
+<text text-anchor="middle" x="99.96" y="-377.29" font-family="Times,serif" font-size="14.00" style="">withdraw</text>
+</g>
+<!-- StakingRewardsFacet.distributeRewards -->
+<g id="node7" class="node" pointer-events="visible" data-name="StakingRewardsFacet.distributeRewards">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="301.23" cy="-239.49" rx="81.11" ry="18" style=""/>
+<text text-anchor="middle" x="301.23" y="-235.29" font-family="Times,serif" font-size="14.00" style="">distributeRewards</text>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;StakingRewardsFacet.distributeRewards -->
+<g id="edge9" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;StakingRewardsFacet.distributeRewards">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M136.6,-368.55C152.68,-363.97 170.93,-357.32 183.93,-345.49 213.67,-318.44 191.07,-290.5 219.93,-262.49 221.48,-260.98 223.12,-259.54 224.82,-258.17" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="226.44,-261.3 232.69,-252.75 222.47,-255.54 226.44,-261.3" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;StakingRewardsFacet.distributeRewards -->
+<g id="edge11" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;StakingRewardsFacet.distributeRewards">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M148.95,-381.97C161.47,-378.32 174.18,-372.36 183.93,-363.49 213.67,-336.44 191.07,-308.5 219.93,-280.49 228.31,-272.36 239.02,-266.21 249.87,-261.34" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="250.87,-264.72 258.79,-257.68 248.21,-258.24 250.87,-264.72" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;StakingRewardsFacet._updateReward -->
+<g id="edge6" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;StakingRewardsFacet._updateReward">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M148.19,-378.18C168.87,-376.72 193.77,-374.97 217.37,-373.31" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="217.57,-376.81 227.3,-372.62 217.08,-369.83 217.57,-376.81" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;StakingRewardsFacet.LockInPeriod -->
+<g id="edge8" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;StakingRewardsFacet.LockInPeriod">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M138.7,-369.71C152.93,-365.13 169.23,-359.74 183.93,-354.49 200.1,-348.72 203.79,-346.34 219.93,-340.49 227.82,-337.63 236.19,-334.7 244.43,-331.88" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="245.55,-335.2 253.89,-328.67 243.3,-328.57 245.55,-335.2" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge10" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M145.06,-373.88C158.65,-369.86 172.91,-363.76 183.93,-354.49 210.1,-332.48 190.63,-304.13 219.93,-286.49 281.84,-249.22 311.2,-274.92 382.53,-286.49 399.18,-289.19 402.21,-294.27 418.53,-298.49 463.91,-310.24 516.43,-319.71 554.26,-325.82" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="553.58,-329.26 564.01,-327.37 554.68,-322.35 553.58,-329.26" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdraw&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge7" class="edge" data-name="StakingRewardsFacet.withdraw-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M146.45,-375.85C160.28,-371.96 174.35,-365.43 183.93,-354.49 242,-288.2 154.05,-218.03 219.93,-159.49 263.72,-120.58 427.22,-123.11 526.76,-128.66" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="526.26,-132.14 536.45,-129.23 526.67,-125.15 526.26,-132.14" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdrawAll -->
+<g id="node3" class="node" pointer-events="visible" data-name="StakingRewardsFacet.withdrawAll">
+
+<ellipse fill="#ffbdb9" stroke="#ffbdb9" stroke-width="3" cx="99.96" cy="-327.49" rx="59.7" ry="18" style=""/>
+<text text-anchor="middle" x="99.96" y="-323.29" font-family="Times,serif" font-size="14.00" style="">withdrawAll</text>
+</g>
+<!-- StakingRewardsFacet.withdrawAll&#45;&gt;StakingRewardsFacet.distributeRewards -->
+<g id="edge16" class="edge" data-name="StakingRewardsFacet.withdrawAll-&gt;StakingRewardsFacet.distributeRewards">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M147.84,-315.51C159.96,-311.54 172.74,-306.55 183.93,-300.49 201.99,-290.71 202.19,-281.86 219.93,-271.49 226.82,-267.47 234.31,-263.74 241.85,-260.35" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="243.06,-263.64 250.89,-256.5 240.32,-257.2 243.06,-263.64" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdrawAll&#45;&gt;StakingRewardsFacet._updateReward -->
+<g id="edge12" class="edge" data-name="StakingRewardsFacet.withdrawAll-&gt;StakingRewardsFacet._updateReward">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M152.02,-337.74C175.7,-342.49 204.22,-348.22 229.89,-353.37" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="229.16,-356.8 239.65,-355.33 230.54,-349.93 229.16,-356.8" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdrawAll&#45;&gt;StakingRewardsFacet.LockInPeriod -->
+<g id="edge14" class="edge" data-name="StakingRewardsFacet.withdrawAll-&gt;StakingRewardsFacet.LockInPeriod">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M159.67,-323.37C180.02,-321.94 203.12,-320.32 224.63,-318.8" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="224.68,-322.31 234.41,-318.12 224.19,-315.33 224.68,-322.31" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdrawAll&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge15" class="edge" data-name="StakingRewardsFacet.withdrawAll-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M153.39,-317.99C164.47,-314.04 175.38,-308.43 183.93,-300.49 214.89,-271.73 184.84,-236.05 219.93,-212.49 279.93,-172.21 312.48,-194.72 382.53,-212.49 456.49,-231.25 532.48,-279.98 573.92,-309.56" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="571.82,-312.36 581.97,-315.4 575.93,-306.69 571.82,-312.36" style=""/>
+</g>
+<!-- StakingRewardsFacet.withdrawAll&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge13" class="edge" data-name="StakingRewardsFacet.withdrawAll-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M154.98,-318.97C165.85,-314.96 176.27,-309.09 183.93,-300.49 237.88,-239.88 157.14,-172.91 219.93,-121.49 266.57,-83.3 438.2,-105.21 536.09,-121.61" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="535.38,-125.04 545.82,-123.27 536.55,-118.14 535.38,-125.04" style=""/>
+</g>
+<!-- StakingRewardsFacet.earned -->
+<g id="node4" class="node" pointer-events="visible" data-name="StakingRewardsFacet.earned">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="455.3" cy="-395.49" rx="36.54" ry="18" style=""/>
+<text text-anchor="middle" x="455.3" y="-391.29" font-family="Times,serif" font-size="14.00" style="">earned</text>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge17" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M467.3,-377.08C481.23,-364.3 506.06,-351.65 528.07,-342.49 536.49,-338.99 545.54,-335.56 554.38,-332.65" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="555.19,-336.06 563.76,-329.82 553.17,-329.36 555.19,-336.06" style=""/>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge21" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M482.21,-381.93C495.7,-375.11 512.58,-366.94 528.07,-360.49 538.3,-356.24 549.46,-352.08 560.04,-348.36" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="560.94,-351.75 569.26,-345.18 558.66,-345.13 560.94,-351.75" style=""/>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge23" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M493.17,-393.69C504.26,-389.03 516.55,-383.29 528.07,-378.49 545.01,-371.44 564.52,-364.66 579.74,-357.38" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="581.06,-360.64 588.23,-352.84 577.76,-354.47 581.06,-360.64" style=""/>
+</g>
+<!-- StakingRewardsFacet.ZeroAddress -->
+<g id="node12" class="node" pointer-events="visible" data-name="StakingRewardsFacet.ZeroAddress">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="606.69" cy="-441.49" rx="60.83" ry="18" style=""/>
+<text text-anchor="middle" x="606.69" y="-437.29" font-family="Times,serif" font-size="14.00" style="">ZeroAddress</text>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.ZeroAddress -->
+<g id="edge18" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.ZeroAddress">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M487.98,-405.25C505.87,-410.76 528.75,-417.8 549.57,-424.21" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="548.39,-427.51 558.98,-427.11 550.45,-420.82 548.39,-427.51" style=""/>
+</g>
+<!-- StakingRewardsFacet.IERC20Metadata -->
+<g id="node13" class="node" pointer-events="visible" data-name="StakingRewardsFacet.IERC20Metadata">
+
+<ellipse fill="#edad56" stroke="#edad56" stroke-width="3" cx="606.69" cy="-387.49" rx="78.73" ry="18" style=""/>
+<text text-anchor="middle" x="606.69" y="-383.29" font-family="Times,serif" font-size="14.00" style="">IERC20Metadata</text>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.IERC20Metadata -->
+<g id="edge20" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.IERC20Metadata">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M490.2,-387.92C497.57,-387.12 505.71,-386.41 514.16,-385.8" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="514.37,-389.29 524.12,-385.15 513.91,-382.31 514.37,-389.29" style=""/>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;StakingRewardsFacet.IERC20Metadata -->
+<g id="edge22" class="edge" data-name="StakingRewardsFacet.earned-&gt;StakingRewardsFacet.IERC20Metadata">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M492.46,-399.43C502.67,-399.4 514.21,-399.06 525.91,-398.5" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="525.8,-402.01 535.59,-397.97 525.41,-395.02 525.8,-402.01" style=""/>
+</g>
+<!-- StakingRewardsFacet.earned&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge19" class="edge" data-name="StakingRewardsFacet.earned-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M461.38,-376.28C473.53,-331.2 505.02,-220.14 528.07,-189.49 537.21,-177.34 549.81,-166.82 562.2,-158.33" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="563.89,-161.4 570.4,-153.03 560.1,-155.52 563.89,-161.4" style=""/>
+</g>
+<!-- StakingRewardsFacet.getBalance -->
+<g id="node5" class="node" pointer-events="visible" data-name="StakingRewardsFacet.getBalance">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="99.96" cy="-273.49" rx="53.86" ry="18" style=""/>
+<text text-anchor="middle" x="99.96" y="-269.29" font-family="Times,serif" font-size="14.00" style="">getBalance</text>
+</g>
+<!-- StakingRewardsFacet.getBalance&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge24" class="edge" data-name="StakingRewardsFacet.getBalance-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M150.98,-266.21C163.22,-262.21 175.28,-256.03 183.93,-246.49 233.77,-191.54 162.09,-129.95 219.93,-83.49 321,-2.31 487.3,-71.49 564.25,-111.23" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="562.22,-114.12 572.7,-115.68 565.48,-107.92 562.22,-114.12" style=""/>
+</g>
+<!-- StakingRewardsFacet.getRewardBalance -->
+<g id="node6" class="node" pointer-events="visible" data-name="StakingRewardsFacet.getRewardBalance">
+
+<ellipse fill="#ff9797" stroke="#ff9797" stroke-width="3" cx="99.96" cy="-219.49" rx="83.93" ry="18" style=""/>
+<text text-anchor="middle" x="99.96" y="-215.29" font-family="Times,serif" font-size="14.00" style="">getRewardBalance</text>
+</g>
+<!-- StakingRewardsFacet.getRewardBalance&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge25" class="edge" data-name="StakingRewardsFacet.getRewardBalance-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M105.7,-200.15C117.92,-160.26 154.23,-71.16 219.93,-36.49 326.9,19.95 377.73,2.96 492.07,-36.49 530.24,-49.66 565.38,-81.52 586.17,-105.56" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="583.47,-107.78 592.51,-113.3 588.88,-103.34 583.47,-107.78" style=""/>
+</g>
+<!-- StakingRewardsFacet.getRewardBalance&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge26" class="edge" data-name="StakingRewardsFacet.getRewardBalance-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M109.28,-200.25C124.21,-163.72 159.73,-86.26 219.93,-54.49 326.9,1.95 377.73,-15.04 492.07,-54.49 523.56,-65.36 552.98,-88.94 574,-107.84" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="571.36,-110.17 581.09,-114.35 576.09,-105.01 571.36,-110.17" style=""/>
+</g>
+<!-- StakingRewardsFacet.distributeRewards&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge28" class="edge" data-name="StakingRewardsFacet.distributeRewards-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M343.32,-256.19C365.42,-264.88 393.26,-275.36 418.53,-283.49 465.13,-298.49 519.24,-312.6 557.25,-321.98" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="556.01,-325.28 566.56,-324.25 557.67,-318.48 556.01,-325.28" style=""/>
+</g>
+<!-- StakingRewardsFacet.distributeRewards&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge27" class="edge" data-name="StakingRewardsFacet.distributeRewards-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M360.77,-226.18C398.71,-216.89 448.93,-203.34 492.07,-187.49 515.47,-178.9 540.67,-167.39 561.38,-157.29" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="562.88,-160.45 570.29,-152.88 559.78,-154.18 562.88,-160.45" style=""/>
+</g>
+<!-- StakingRewardsFacet._updateReward&#45;&gt;StakingRewardsFacet.earned -->
+<g id="edge31" class="edge" data-name="StakingRewardsFacet._updateReward-&gt;StakingRewardsFacet.earned">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M361.46,-378.4C376.53,-381.17 392.53,-384.12 406.92,-386.77" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="406.17,-390.19 416.63,-388.56 407.43,-383.3 406.17,-390.19" style=""/>
+</g>
+<!-- StakingRewardsFacet._updateReward&#45;&gt;StakingRewardsFacet.address -->
+<g id="edge29" class="edge" data-name="StakingRewardsFacet._updateReward-&gt;StakingRewardsFacet.address">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M367.72,-359.45C384.3,-357.46 402.07,-355.36 418.53,-353.49 464.13,-348.31 516.03,-342.8 553.58,-338.87" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="553.64,-342.39 563.23,-337.87 552.92,-335.42 553.64,-342.39" style=""/>
+</g>
+<!-- StakingRewardsFacet._updateReward&#45;&gt;LibDiamond.stakingStorage -->
+<g id="edge30" class="edge" data-name="StakingRewardsFacet._updateReward-&gt;LibDiamond.stakingStorage">
+
+<path fill="none" stroke="white" stroke-width="2" d="M354.03,-354.16C363.89,-350.51 373.83,-346 382.53,-340.49 461.3,-290.66 457.39,-250.26 528.07,-189.49 540.4,-178.89 554.72,-168.31 567.68,-159.31" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="569.39,-162.38 575.68,-153.85 565.44,-156.6 569.39,-162.38" style=""/>
+</g>
+<!-- key -->
+<g id="node15" class="node" pointer-events="visible" data-name="key">
+
+<polygon fill="#edad56" stroke="none" stroke-width="3" points="164.96,-596.49 34.96,-596.49 34.96,-508.49 164.96,-508.49 164.96,-596.49" style=""/>
+<text text-anchor="start" x="84.6" y="-577.89" font-family="Times,serif" font-size="14.00" style="">Internal Call</text>
+<text text-anchor="start" x="80.71" y="-557.89" font-family="Times,serif" font-size="14.00" style="">External Call</text>
+<text text-anchor="start" x="58.17" y="-537.89" font-family="Times,serif" font-size="14.00" style="">Defined Contract</text>
+<text text-anchor="start" x="44.56" y="-517.89" font-family="Times,serif" font-size="14.00" style="">Undefined Contract</text>
+</g>
+<!-- key2 -->
+<g id="node16" class="node" pointer-events="visible" data-name="key2">
+
+<polygon fill="#edad56" stroke="none" stroke-width="3" points="328.23,-596.49 274.23,-596.49 274.23,-508.49 328.23,-508.49 328.23,-596.49" style=""/>
+<text text-anchor="start" x="291.23" y="-577.89" font-family="Times,serif" font-size="14.00" style="">   </text>
+<text text-anchor="start" x="291.23" y="-557.89" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="#445773" stroke="none" points="289.23,-532.49 289.23,-552.49 314.23,-552.49 314.23,-532.49 289.23,-532.49" style=""/>
+<text text-anchor="start" x="291.23" y="-537.89" font-family="Times,serif" font-size="14.00" style="">   </text>
+<polygon fill="none" stroke="#e8726d" points="291.23,-514.49 291.23,-530.49 312.23,-530.49 312.23,-514.49 291.23,-514.49" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge32" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="#1bc6a6" stroke-width="2" d="M157.96,-582.49C211.34,-582.49 227.81,-582.49 275.41,-582.49" style=""/>
+<polygon fill="#1bc6a6" stroke="#1bc6a6" stroke-width="2" points="275.2,-585.99 285.2,-582.49 275.2,-578.99 275.2,-585.99" style=""/>
+</g>
+<!-- key&#45;&gt;key2 -->
+<g id="edge33" class="edge" data-name="key-&gt;key2">
+
+<path fill="none" stroke="white" stroke-width="2" d="M157.96,-562.49C211.34,-562.49 227.81,-562.49 275.41,-562.49" style=""/>
+<polygon fill="white" stroke="white" stroke-width="2" points="275.2,-565.99 285.2,-562.49 275.2,-558.99 275.2,-565.99" style=""/>
+</g>
+</g>
+</svg>
