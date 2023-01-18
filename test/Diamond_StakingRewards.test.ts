@@ -2,111 +2,53 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  Cupcake,
-  Donut,
-  StakingRewardsFacet,
-  DiamondCutFacet,
-  DiamondInit,
-} from "../typechain-types";
-import { deployDiamond } from "../scripts/deploy";
-
-const {
-  getSelectors,
-  FacetCutAction,
-} = require("../scripts/libraries/diamond.js");
+import { Cupcake, Donut, StakingRewardsFacet } from "../typechain-types";
+import { deploy } from "../scripts/deploy";
+import { donutTokenDecimals, initialSupply } from "../scripts/donut-deploy";
+import { cupcakeTokenDecimals } from "../scripts/cupcake-deploy";
 
 describe("StakingRewardsFacet", () => {
   const ONE_YEAR_IN_SECONDS = 31536000;
   const ONE_MONTH_IN_SECONDS = 2592000;
   let currenTimestamp;
+  let deployments
   let stakingRewardsFacet: StakingRewardsFacet;
   let stakingToken: Cupcake;
-  let stakingTokenDecimals = 8;
-  let stakingTokenTotalSupply = ethers.utils.parseUnits(
-    "1000000000",
-    stakingTokenDecimals
-  );
   let rewardToken: Donut;
-  let rewardTokenDecimals = 12;
-  let rewardTokenInitialSupply = ethers.utils.parseUnits(
-    "1000000",
-    rewardTokenDecimals
-  );
-  let rewardRate = 12;
   let owner: SignerWithAddress;
   let users: SignerWithAddress[];
   let tx;
-  let receipt;
 
   before(async () => {
     [owner, ...users] = await ethers.getSigners();
 
-    // deploy staking token
-    let StakingToken = await ethers.getContractFactory("Cupcake");
-    stakingToken = await StakingToken.deploy(stakingTokenTotalSupply);
-    await stakingToken.deployed();
-    console.log(`Cupcake (staking token) deployed at: ${stakingToken.address}`);
+    // deploy diamond, staking and reward token, stakingrewardsFacet
+    deployments = await deploy();
+
+    stakingToken = await ethers.getContractAt(
+      "Cupcake",
+      deployments.stakingToken
+    );
+
+    rewardToken = await ethers.getContractAt("Donut", deployments.rewardToken);
+    
+    stakingRewardsFacet = await ethers.getContractAt(
+      "StakingRewardsFacet",
+      deployments.stakingRewardsFacet
+    );
 
     // transfer some staking tokens form owner to users
     for (let i = 0; i < 5; i++) {
       tx = await stakingToken.transfer(
         users[i].address,
-        ethers.utils.parseUnits("1000", stakingTokenDecimals)
+        ethers.utils.parseUnits("1000", cupcakeTokenDecimals)
       );
-      receipt = await tx.wait();
+      await tx.wait();
     }
-
-    // deploy reward token
-    let RewardToken = await ethers.getContractFactory("Donut");
-    rewardToken = await RewardToken.deploy(rewardTokenInitialSupply);
-    await rewardToken.deployed();
-    console.log(`Donut (reward token) deployed at: ${rewardToken.address}`);
-
-    // deploy Diamond
-    let { diamond, diamondInit } = await deployDiamond();
-
-    // deploy staking rewards facet
-    let StakingRewardsFacet = await ethers.getContractFactory(
-      "StakingRewardsFacet"
-    );
-    stakingRewardsFacet = await StakingRewardsFacet.deploy();
-    await stakingRewardsFacet.deployed();
-
-    // initialize state variables for staking rewards facet
-    let diamondInitInstance = await ethers.getContractAt(
-      "DiamondInit",
-      diamondInit
-    );
-    let functionCall = diamondInitInstance.interface.encodeFunctionData(
-      "init_StakingRewardsFacet",
-      [stakingToken.address, rewardToken.address, rewardRate]
-    );
-
-    // upgrade Diamond with staking rewards facet address
-    const cut = [];
-    cut.push({
-      facetAddress: stakingRewardsFacet.address,
-      action: FacetCutAction.Add,
-      functionSelectors: getSelectors(stakingRewardsFacet),
-    });
-    let diamondCutFacet = await ethers.getContractAt("IDiamondCut", diamond);
-
-    tx = await diamondCutFacet.diamondCut(cut, diamondInit, functionCall);
-    receipt = await tx.wait();
-    if (!receipt.status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
-    }
-
-    // Initialize staking rewards facet with diamond address
-    stakingRewardsFacet = await ethers.getContractAt(
-      "StakingRewardsFacet",
-      diamond
-    );
 
     // Transfer reward tokens to Diamond
-    tx = await rewardToken.transfer(diamond, rewardTokenInitialSupply);
-    receipt = await tx.wait();
+    tx = await rewardToken.transfer(deployments.diamond, initialSupply);
+    await tx.wait();
   });
 
   describe("stake", () => {
@@ -119,21 +61,20 @@ describe("StakingRewardsFacet", () => {
     });
 
     it("should stake the given amount", async () => {
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("100", cupcakeTokenDecimals);
       await expect(
         stakingToken
           .connect(users[0])
           .approve(stakingRewardsFacet.address, amount)
       ).not.to.be.reverted;
 
-      await expect(
-        stakingRewardsFacet.connect(users[0]).stake(amount)
-      ).to.changeTokenBalance(stakingToken, stakingRewardsFacet, amount)
+      await expect(stakingRewardsFacet.connect(users[0]).stake(amount))
+        .to.changeTokenBalance(stakingToken, stakingRewardsFacet, amount)
         .to.emit(stakingRewardsFacet, "Staked");
     });
 
     it("should revert if staked during lock in period", async () => {
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("100", cupcakeTokenDecimals);
       await expect(
         stakingRewardsFacet.connect(users[0]).stake(amount)
       ).to.be.revertedWithCustomError(stakingRewardsFacet, "LockInPeriod");
@@ -143,7 +84,7 @@ describe("StakingRewardsFacet", () => {
   describe("withdraw", () => {
     let amount;
     it("should revert if withdrawn during lock-in period", async () => {
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("100", cupcakeTokenDecimals);
 
       await expect(
         stakingRewardsFacet.connect(users[0]).withdraw(amount)
@@ -167,7 +108,7 @@ describe("StakingRewardsFacet", () => {
 
     it("should withdraw given amount and distribute rewards", async () => {
       //user[1]
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("100", cupcakeTokenDecimals);
 
       // approve
       await expect(
@@ -212,7 +153,7 @@ describe("StakingRewardsFacet", () => {
 
     it("should return the amount of reward tokens earned by the user", async () => {
       //user[2]
-      amount = ethers.utils.parseUnits("100", stakingTokenDecimals);
+      amount = ethers.utils.parseUnits("100", cupcakeTokenDecimals);
 
       // approve
       await expect(
@@ -237,7 +178,7 @@ describe("StakingRewardsFacet", () => {
       );
       user2rewardBalance = ethers.utils.formatUnits(
         user2rewardBalance,
-        rewardTokenDecimals
+        donutTokenDecimals
       );
       user2rewardBalance = parseFloat(user2rewardBalance);
 

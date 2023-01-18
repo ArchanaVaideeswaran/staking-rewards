@@ -1,0 +1,38 @@
+{
+  "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+  "network": {
+    "name": "localhost",
+    "chainId": 31337
+  },
+  "abi": [
+    {
+      "type": "function",
+      "name": "init",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "init_StakingRewardsFacet",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "stakingToken"
+        },
+        {
+          "type": "address",
+          "name": "rewardToken"
+        },
+        {
+          "type": "uint8",
+          "name": "rewardRate"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}
