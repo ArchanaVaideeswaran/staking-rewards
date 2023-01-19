@@ -6,11 +6,11 @@ export async function deployStakingRewardsFacet(): Promise<string> {
   let network = (await ethers.provider.getNetwork()).name;
   network = network == "unknown" ? "localhost" : network;
 
-  const Diamond = require(`../build/localhost/Diamond.json`);
+  const Diamond = require(`../build/${network}/Diamond.json`);
 
   const diamondCut = await ethers.getContractAt("IDiamondCut", Diamond.address);
 
-  const DiamondInit = require(`../build/localhost/DiamondInit.json`);
+  const DiamondInit = require(`../build/${network}/DiamondInit.json`);
   const diamondInit = await ethers.getContractAt(
     "DiamondInit",
     DiamondInit.address
@@ -42,11 +42,11 @@ export async function deployStakingRewardsFacet(): Promise<string> {
       functionSelectors: getSelectors(stakingRewardsFacet),
     },
   ];
-  console.log("Diamond Cut:", cut);
+  // console.log("Diamond Cut:", cut);
 
   // call to init function
-  let stakingToken = require(`../build/localhost/Cupcake.json`);
-  let rewardToken = require(`../build/localhost/Donut.json`);
+  let stakingToken = require(`../build/${network}/Cupcake.json`);
+  let rewardToken = require(`../build/${network}/Donut.json`);
   let rewardRate = 12;
   let functionCall = diamondInit.interface.encodeFunctionData(
     "init_StakingRewardsFacet",
@@ -61,7 +61,7 @@ export async function deployStakingRewardsFacet(): Promise<string> {
   }
   
   console.log("Diamond cut tx: ", tx.hash);
-  console.log("Completed diamond cut");
+  // console.log("Completed diamond cut");
 
   return Diamond.address;
 }
