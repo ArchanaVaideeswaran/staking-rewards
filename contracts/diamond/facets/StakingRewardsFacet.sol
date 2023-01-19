@@ -64,7 +64,11 @@ contract StakingRewardsFacet is ReentrancyGuard, Pausable {
 
     if (uint32(block.timestamp) < user.finishAt) revert LockInPeriod();
 
-    s.stakingToken.safeTransfer(address(msg.sender), user.balance);
+    if (user.balance == 0) revert ZeroAmount();
+    
+    uint256 balance = user.balance;
+    user.balance = 0;
+    s.stakingToken.safeTransfer(address(msg.sender), balance);
     emit Withdraw(msg.sender, user.balance);
     distributeRewards();
   }

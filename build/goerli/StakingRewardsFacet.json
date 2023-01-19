@@ -1,0 +1,200 @@
+{
+  "address": "0x28d7fa71867808cE69d78252F8B0A4a9EF668201",
+  "network": {
+    "name": "goerli",
+    "chainId": 5
+  },
+  "abi": [
+    {
+      "type": "error",
+      "name": "LockInPeriod",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAddress",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAmount",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Paused",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "RewardsPaid",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "stakeHolder",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Staked",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "stakeHolder",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Unpaused",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Withdraw",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "stakeHolder",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "earned",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getBalance",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getRewardBalance",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "paused",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "stake",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "withdraw",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "withdrawAll",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    }
+  ]
+}

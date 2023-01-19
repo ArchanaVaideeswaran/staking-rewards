@@ -1,0 +1,8 @@
+{
+  "address": "0x28d7fa71867808cE69d78252F8B0A4a9EF668201",
+  "network": {
+    "name": "goerli",
+    "chainId": 5
+  },
+  "abi": []
+}

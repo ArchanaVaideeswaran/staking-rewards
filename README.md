@@ -30,6 +30,20 @@ The Staking Rewards contract is deployed as a Diamond facet, with storage and in
 
 ![StakingRewardsFacet Mindmap](./staking-rewards-facet-map.svg "StakingRewardsFacet Mindmap")
 
+## Deployments
+
+DiamondCutFacet deployed: [0xCD8e0ce7122e6b22d9cB03f96373BeDD29D2ad34](https://goerli.etherscan.io/address/0xCD8e0ce7122e6b22d9cB03f96373BeDD29D2ad34#code)
+
+Diamond deployed: [0x28d7fa71867808cE69d78252F8B0A4a9EF668201](https://goerli.etherscan.io/address/0x28d7fa71867808cE69d78252F8B0A4a9EF668201#code)
+
+DiamondInit deployed: [0x619105B29d1e973a8a1ac869aa0dA0D0c28c97FD](https://goerli.etherscan.io/address/0x619105B29d1e973a8a1ac869aa0dA0D0c28c97FD#code)
+
+Cupcake deployed at: [0xFEc5bcffa73617fe1470729417Ba575Bc297B759](https://goerli.etherscan.io/address/0xFEc5bcffa73617fe1470729417Ba575Bc297B759#code)
+
+Donut deployed at: [0xc4063e39f3659Fc7c267274b8490B32318162066](https://goerli.etherscan.io/address/0xc4063e39f3659Fc7c267274b8490B32318162066#code)
+
+Staking Rewards Facet deployed at: [0x9284506b74e5900265e8810438d54f503DAFA59E](https://goerli.etherscan.io/address/0x9284506b74e5900265e8810438d54f503DAFA59E#code)
+
 ## Installation
 
 Install the necessary dependencies mentioned in [package.json](./package.json)
@@ -159,8 +173,8 @@ For multiple arguments, follow this [guide](https://hardhat.org/plugins/nomiclab
 ## Notes
 
 - All the files and folders that have been [modified after hardhat default], as mentioned in the above directory layout, consists of well-commented codes in the respective places, regarding the modifications.
-<!-- 
+
 ## Reports
 
 Checkout [Reports.md](./Reports.md)
- -->
+
