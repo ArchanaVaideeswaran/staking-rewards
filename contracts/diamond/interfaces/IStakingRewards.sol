@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+ * @notice Interface to interace with the staking rewards facet of the Diamond.
+ */
 interface IStakingRewards {
   function stake(uint256 amount) external;
 
