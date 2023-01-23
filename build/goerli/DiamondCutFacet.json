@@ -1,0 +1,94 @@
+{
+  "address": "0x28d7fa71867808cE69d78252F8B0A4a9EF668201",
+  "network": {
+    "name": "goerli",
+    "chainId": 5
+  },
+  "abi": [
+    {
+      "type": "error",
+      "name": "InitializationFunctionReverted",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_initializationContractAddress"
+        },
+        {
+          "type": "bytes",
+          "name": "_calldata"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "DiamondCut",
+      "inputs": [
+        {
+          "type": "tuple[]",
+          "name": "_diamondCut",
+          "indexed": false,
+          "components": [
+            {
+              "type": "address",
+              "name": "facetAddress"
+            },
+            {
+              "type": "uint8",
+              "name": "action"
+            },
+            {
+              "type": "bytes4[]",
+              "name": "functionSelectors"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "_init",
+          "indexed": false
+        },
+        {
+          "type": "bytes",
+          "name": "_calldata",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "diamondCut",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "tuple[]",
+          "name": "_diamondCut",
+          "components": [
+            {
+              "type": "address",
+              "name": "facetAddress"
+            },
+            {
+              "type": "uint8",
+              "name": "action"
+            },
+            {
+              "type": "bytes4[]",
+              "name": "functionSelectors"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "_init"
+        },
+        {
+          "type": "bytes",
+          "name": "_calldata"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

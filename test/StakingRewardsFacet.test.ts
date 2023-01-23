@@ -6,6 +6,7 @@ import { Cupcake, Donut, StakingRewardsFacet } from "../typechain-types";
 import { deploy } from "../scripts/deploy";
 import { donutTokenDecimals, initialSupply } from "../scripts/donut-deploy";
 import { cupcakeTokenDecimals } from "../scripts/cupcake-deploy";
+import { BigNumber } from "ethers";
 
 describe("StakingRewardsFacet", () => {
   // constants
