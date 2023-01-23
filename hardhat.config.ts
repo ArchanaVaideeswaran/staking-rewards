@@ -6,29 +6,33 @@ import { config as dotenv } from "dotenv";
 dotenv();
 
 const config: HardhatUserConfig = {
-    solidity: {
-        compilers: [
-            {
-                version: "0.8.17",
-                settings: {
-                    optimizer: { enabled: true, runs: 200 },
-                },
-            },
-        ],
-    },
-    networks: {
-        localhost: {
-            url: "http://127.0.0.1:8545/",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: { enabled: true, runs: 200 },
         },
-        truffle: {
-            url: "http://localhost:24012/rpc",
-        },
+      },
+    ],
+  },
+  paths: {
+    cache: "./build/cache",
+    artifacts: "./build/artifacts",
+  },
+  networks: {
+    localhost: {
+      url: "http://127.0.0.1:8545/",
     },
-    etherscan: {
-        apiKey: {
-            goerli: `${process.env.ETHERSCAN_API}`,
-        },
+    truffle: {
+      url: "http://localhost:24012/rpc",
     },
+  },
+  etherscan: {
+    apiKey: {
+      goerli: `${process.env.ETHERSCAN_API}`,
+    },
+  },
 };
 
 export default config;

@@ -27,7 +27,6 @@ The Staking Rewards contract is deployed as a Diamond facet, with storage and in
 - `function getBalance(address account) public view returns (uint256)`
 - `function getRewardBalance(address account) public view returns (uint256)`
 
-
 ![StakingRewardsFacet Mindmap](./staking-rewards-facet-map.svg "StakingRewardsFacet Mindmap")
 
 ## Deployments
@@ -96,7 +95,7 @@ npx hardhat coverage
 
 ### Deploy
 
--   Environment variables: Create a `.env` file with values as in [.env.example](./.env.example)
+- Environment variables: Create a `.env` file with values as in [.env.example](./.env.example)
 
 #### localhost
 
@@ -112,11 +111,11 @@ npx hardhat run scripts/deploy.ts --network <network>
 
 #### Goerli Testnet
 
--   Install [Truffle](https://trufflesuite.com/docs/truffle/how-to/use-the-truffle-dashboard/) `npm install -g truffle`
--   Run `truffle dashboard` on one terminal
--   Truffle dashboard will open up on `http://localhost:24012/rpc`
--   Connect wallet and switch to Goerli test network
--   Run the deploy script in another terminal
+- Install [Truffle](https://trufflesuite.com/docs/truffle/how-to/use-the-truffle-dashboard/) `npm install -g truffle`
+- Run `truffle dashboard` on one terminal
+- Truffle dashboard will open up on `http://localhost:24012/rpc`
+- Connect wallet and switch to Goerli test network
+- Run the deploy script in another terminal
 
 ```console
 npx hardhat run scripts/deploy.ts --network truffle
@@ -177,4 +176,3 @@ For multiple arguments, follow this [guide](https://hardhat.org/plugins/nomiclab
 ## Reports
 
 Checkout [Reports.md](./Reports.md)
-
