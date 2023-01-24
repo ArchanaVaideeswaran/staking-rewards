@@ -1,58 +1,29 @@
-import fs from 'fs';
-import hre, { ethers } from 'hardhat';
-import { ContractFactory, Contract } from 'ethers';
+import { deployCupcake } from "./cupcake-deploy";
+import { deployDiamond } from "./diamond-deploy";
+import { deployDonut } from "./donut-deploy";
+import { deployStakingRewardsFacet } from "./staking-rewards-facet-deploy";
 
-const main = async () => {
-  await hre.run('compile');
+export async function deploy(): Promise<{
+  diamond: string;
+  stakingToken: string;
+  rewardToken: string;
+  stakingRewardsFacet: string;
+}> {
+  const diamond = await deployDiamond();
+  const stakingToken = await deployCupcake();
+  const rewardToken = await deployDonut();
+  const stakingRewardsFacet = await deployStakingRewardsFacet();
 
-  const Greeter: ContractFactory = await ethers.getContractFactory('Greeter');
-  const greeter: Contract = await Greeter.deploy('Hello, Hardhat!');
+  return { diamond, stakingToken, rewardToken, stakingRewardsFacet };
+}
 
-  await greeter.deployed();
-
-  console.log(`Greeter deployed to: ${greeter.address}`);
-  console.log(`Transaction hash: ${greeter.deployTransaction.hash}`);
-
-  // ----------------- MODIFIED FOR SAVING DEPLOYMENT DATA ----------------- //
-
-  /**
-   * @summary A build folder will be created in the root directory of the project
-   * where the ABI, network name, chainId and the deployed address will be saved inside a JSON file.
-   */
-
-  fs.mkdir('./build/deployments', { recursive: true }, (err) => {
-    if (err) console.error(err);
-  });
-
-  const address: string = greeter.address;
-  const res = await greeter.provider.getNetwork();
-  const network: {} = {
-    chainId: res.chainId,
-    name: res.name,
-  };
-  const abi: [] = JSON.parse(String(greeter.interface.format('json')));
-
-  const output = {
-    address,
-    network,
-    abi,
-  };
-
-  try {
-    fs.writeFileSync(
-      './build/deployments/deploy.json',
-      JSON.stringify(output, null, 2)
-    );
-  } catch (err) {
-    console.log(err);
-  }
-
-  // ----------------------------------------------------------------------- //
-};
-
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+if (require.main === module) {
+  deploy()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}

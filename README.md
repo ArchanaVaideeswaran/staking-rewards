@@ -1,96 +1,143 @@
-# Basic Hardhat Project Boilerplate
+# Staking Rewards
 
-## Prerequisites
+## Overview
 
-- Install truffle : `npm i -g truffle`
-- The latest version of truffle has issues with installation on Windows.
-- To resolve the errors, go to [this page](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false), download Microsoft Visual Studio 2022 and then install the Visual Studio Installer.
-- Select Desktop Development with C++ and uncheck all the optional installation options.
-- Once it is done, the truffle can be installed with `npm i -g truffle`
+Staking is a way of earning rewards for holding a certain cryptocurrency. The Staking Rewards contract does exactly that. It allows users to stake a particular token for a period of time to earn a constant Anual Percentage Return (ARP) of the reward token.
 
-## Instructions and hardhat commands
+## Assumptions
 
-- Install the boilerplate project dependencies. \
-  Do a check for the latest npm package versions. \
-  This will update the versions inside the package.json.
+- Users can stake the staking token at any time.
+- There is no limit set for the minimum number of tokens being staked.
+- Once staked users cannot withdraw or stake again for the set lock-in period.
+- The rewards are generated at a constant 12% APR.
+- Rewards are generated as long as there is a stake balance left in the contract.
 
-  ```shell
-  npx npm-check-updates -u
-  ```
+## Specifications
 
-  ```shell
-  yarn install
-  ```
+The staking rewards contract follows the [EIP-2535 Diamond Standard](https://eips.ethereum.org/EIPS/eip-2535). A diamond is a contract with external functions that are supplied by contracts called facets. Facets are separate, independent contracts that can share internal functions, libraries, and state variables.
 
-  This will install the packages mentioned inside the `package.json` file.
+## Staking Rewards Facet
 
-- Compile the smart contracts.
+The Staking Rewards contract is deployed as a Diamond facet, with storage and internal functions abstracted in the LibDiamond library. The staking rewards facet consists of the following external/ public functions,
 
-  ```shell
-  yarn run clean-compile
-  ```
+- `function stake(uint amount) external nonReentrant whenNotPaused;`
+- `function withdraw(uint amount) external nonReentrant whenNotPaused;`
+- `function withdrawAll() external nonReentrant whenNotPaused;`
+- `function earned(address account) public view returns (uint);`
+- `function getBalance(address account) public view returns (uint256)`
+- `function getRewardBalance(address account) public view returns (uint256)`
 
-- Check for linting and formatting errors in the code. This will display all the code errors and warnings in the terminal.
+![StakingRewardsFacet Mindmap](./staking-rewards-facet-map.svg "StakingRewardsFacet Mindmap")
 
-  ```shell
-  npx hardhat check
-  ```
+## Deployments
 
-- Compute the size of the smart contracts. This will display the size of the smart contracts in the terminal.
+DiamondCutFacet deployed: [0xCD8e0ce7122e6b22d9cB03f96373BeDD29D2ad34](https://goerli.etherscan.io/address/0xCD8e0ce7122e6b22d9cB03f96373BeDD29D2ad34#code)
 
-  ```shell
-  yarn run size
-  ```
+Diamond deployed: [0x28d7fa71867808cE69d78252F8B0A4a9EF668201](https://goerli.etherscan.io/address/0x28d7fa71867808cE69d78252F8B0A4a9EF668201#code)
 
-- Instantiate the hardhat local node.
+DiamondInit deployed: [0x619105B29d1e973a8a1ac869aa0dA0D0c28c97FD](https://goerli.etherscan.io/address/0x619105B29d1e973a8a1ac869aa0dA0D0c28c97FD#code)
 
-  ```shell
-  npx hardhat node
-  ```
+Cupcake deployed at: [0xFEc5bcffa73617fe1470729417Ba575Bc297B759](https://goerli.etherscan.io/address/0xFEc5bcffa73617fe1470729417Ba575Bc297B759#code)
 
-- Split the terminal running the hardhat node, or, open another terminal and run the project test scripts using the local node.
+Donut deployed at: [0xc4063e39f3659Fc7c267274b8490B32318162066](https://goerli.etherscan.io/address/0xc4063e39f3659Fc7c267274b8490B32318162066#code)
 
-  ```shell
-  yarn run test
-  ```
+Staking Rewards Facet deployed at: [0x9284506b74e5900265e8810438d54f503DAFA59E](https://goerli.etherscan.io/address/0x9284506b74e5900265e8810438d54f503DAFA59E#code)
 
-- Generate the code coverage report. \
-  After generating the report, you can open the `coverage/index.html` file to see the results.
+## Installation
 
-  ```shell
-  npx hardhat coverage
-  ```
+Install the necessary dependencies mentioned in [package.json](./package.json)
 
-- Generate the documentation for the smart contracts. This will create a `docs` folder comprising all the documentation related to the smart contracts, in the root directory of the project.
+```console
+npm install
+```
 
-  ```shell
-  npx hardhat dodoc
-  ```
+## Usage
 
-- Instantiate the truffle dashboard. \
-  This lets you deploy the contracts without the need of pasting the private key anywhere in the project.
+### Clean
 
-  ```shell
-  truffle dashboard
-  ```
+Delete the smart contract artifacts, the coverage reports and the Hardhat cache
 
-- The browser will open up and then you have to connect with the MetaMask extension. Select the preferred network and the account to deploy the smart contract.
+```console
+npx hardhat clean
+```
 
-- Deploy the hardhat project smart contracts using your preferred network or the truffle dashboard, by specifying the `NETWORK`. If you are using any network other than `truffle` or `localhost`, then the private key of the account from which the smart contract is to be deployed, should be specified in the `.env` file.
+### Compile
 
-  ```shell
-  yarn run deploy {NETWORK}
-  ```
+Compile the contracts and generate typechain types
 
-- If `truffle` has been specified as the `NETWORK`, then switch to the browser and sign the deployment transaction from the MetaMask extension.
+```console
+npx hardhat compile
+```
 
-- After the succesful deployment of the smart contracts, a `build/deploy.json` file will be generated comprising the deployed addresse and the ABI of the smart contracts.
+### Test
 
-- Verify the smart contract using the `NETWORK` on which it was deployed and the smart contract address, alongwith the constructor arguments by modifiying the `verify.ts` file, and entering the network name in the CLI after running the following command.
+Run testcases for the smart contracts
 
-  ```shell
-  yarn run verify {NETWORK}
-  ```
+```console
+npx hardhat test
+```
+
+### Contract Size
+
+Generate smart contract size
+
+```console
+npx hardhat size-contracts
+```
+
+### Coverage
+
+Generate coverage reports for the smart contract
+
+```console
+npx hardhat coverage
+```
+
+### Deploy
+
+- Environment variables: Create a `.env` file with values as in [.env.example](./.env.example)
+
+#### localhost
+
+Run hardhat node in one terminal and run the deploy script in another terminal.
+
+```console
+npx hardhat node
+```
+
+```console
+npx hardhat run scripts/deploy.ts --network <network>
+```
+
+#### Goerli Testnet
+
+- Install [Truffle](https://trufflesuite.com/docs/truffle/how-to/use-the-truffle-dashboard/) `npm install -g truffle`
+- Run `truffle dashboard` on one terminal
+- Truffle dashboard will open up on `http://localhost:24012/rpc`
+- Connect wallet and switch to Goerli test network
+- Run the deploy script in another terminal
+
+```console
+npx hardhat run scripts/deploy.ts --network truffle
+```
+
+### Verify and Publish
+
+Passing constructor params as command line arguments if any exists
+
+```console
+npx hardhat verify --network <network_name> <deployed_contract_address> <constructor params>
+```
+
+OR
+
+Passing a file with constructor params to --constructor args flag
+
+```console
+npx hardhat verify --network <network_name> <deployed_contract_address> --constructor-args verify/contract.args.ts
+```
+
+For multiple arguments, follow this [guide](https://hardhat.org/plugins/nomiclabs-hardhat-etherscan.html#multiple-api-keys-and-alternative-block-explorers).
 
 ## A typical top-level directory layout
 
@@ -99,10 +146,11 @@
 ├── build                 # deployed addresses and the ABI of the smart contract (scripts/deploy.ts)
   └── artifacts           # hardhat deployment information [hardhat default]
   └── cache               # hardhat deployment information [hardhat default]
-  └── deployments         # address and ABI of the smart contract [modified after hardhat default]
+  └── localhost           # address and ABI of the smart contract [localhost (hardhat node)]
+  └── goerli              # address and ABI of the smart contract [Goerli testnet]
 ├── contracts             # smart contracts solidity files
+  └── diamond             # diamond standard implemetation of smart contracts.
 ├── coverage              # coverage report (index.html) [gitignored]
-├── docs                  # smart contracts documentation
 ├── node_modules          # npm/yarn dependency files [gitignored]
 ├── scripts               # deployment scripts (deploy.ts) and other tasks [modified after hardhat default]
 ├── test                  # test scripts [modified after hardhat default]
@@ -124,3 +172,7 @@
 ## Notes
 
 - All the files and folders that have been [modified after hardhat default], as mentioned in the above directory layout, consists of well-commented codes in the respective places, regarding the modifications.
+
+## Reports
+
+Checkout [Reports.md](./Reports.md)
